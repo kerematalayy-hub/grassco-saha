@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="GRASSCO Saha">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>GRASSCO Saha Malzeme Seçimi</title>
+<style>
+:root{
+  --bg:#f3f5f7;--card:#ffffff;--ink:#14212b;--mute:#5d6b76;--line:#d9dfe4;
+  --acc:#23647a;--acc2:#e8f6fa;--grn:#00963f;--sky:#74c7de;--leaf:#89c575;--btnink:#fff;--ok:#1d7a46;--warn:#a85b00;--warnbg:#fff4e5;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0f1517;--card:#172024;--ink:#e6eef0;--mute:#93a5ab;--line:#26353a;
+  --acc:#74c7de;--acc2:#16303a;--grn:#3fbf6e;--sky:#77e6ff;--leaf:#89c575;--btnink:#0f1517;--ok:#58c88a;--warn:#f0a94a;--warnbg:#2e2414;}
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+header{position:sticky;top:0;z-index:10;background:var(--card);border-bottom:3px solid transparent;border-image:linear-gradient(90deg,var(--grn),var(--leaf) 55%,var(--sky) 80%,var(--acc)) 1;padding:0 12px;padding-top:env(safe-area-inset-top)}
+.brand{display:flex;align-items:center;justify-content:space-between;max-width:640px;margin:0 auto;padding:12px 0 6px}
+.brand .logo{display:flex;align-items:center;gap:8px;background:none;border:0;padding:0;color:var(--ink)}
+.brand .logo img{height:34px;display:block}
+.brand .logo{background:#fff;border-radius:8px;padding:3px 6px}
+.brand .wm{font-size:18px;font-weight:800;letter-spacing:2px;color:var(--grn)}
+.brand .tag{font-size:12px;color:var(--mute)}
+nav{display:flex;max-width:640px;margin:0 auto;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{flex:1 0 auto;border:0;background:none;color:var(--mute);padding:10px 8px;font-size:14px;font-weight:600;border-bottom:2px solid transparent}
+nav button.on{color:var(--ink);border-bottom-color:var(--grn)}
+nav .badge{display:inline-block;min-width:18px;padding:0 5px;margin-left:4px;border-radius:9px;background:var(--grn);color:#fff;font-size:11px;line-height:18px}
+main{padding:12px;max-width:640px;margin:0 auto;padding-bottom:40px}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.card h2{font-size:16px;margin:0 0 6px;font-weight:700}
+.card h3{font-size:13px;margin:12px 0 6px;color:var(--mute);text-transform:uppercase;letter-spacing:.5px}
+label{display:block;font-size:12px;color:var(--mute);margin:8px 0 3px}
+select,input{width:100%;font-size:16px;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);appearance:none;-webkit-appearance:none}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--mute) 50%),linear-gradient(135deg,var(--mute) 50%,transparent 50%);background-position:calc(100% - 16px) 55%,calc(100% - 11px) 55%;background-size:5px 5px;background-repeat:no-repeat;padding-right:28px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:7px 12px;border-radius:16px;font-size:14px}
+.chips button.on{background:var(--grn);border-color:var(--grn);color:var(--btnink)}
+.kv{display:grid;grid-template-columns:auto 1fr;column-gap:12px;gap:0;border-top:1px solid var(--line);margin-top:8px}
+.kv div{padding:7px 0;border-bottom:1px solid var(--line)}
+.kv div:nth-child(even){text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.big{background:var(--acc2);border-left:4px solid var(--grn);border-radius:10px;padding:10px 12px;margin-top:10px}
+.big .t{font-size:12px;color:var(--mute)}
+.big .v{font-size:22px;font-weight:700;margin-top:2px;color:var(--acc)}
+.big .s{font-size:13px;color:var(--mute);margin-top:2px}
+.note{font-size:12px;color:var(--mute);margin-top:8px}
+.warn{font-size:13px;background:var(--warnbg);color:var(--warn);border-radius:8px;padding:8px 10px;margin-top:8px}
+.btns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.btn{flex:1 1 auto;border:0;background:var(--acc);color:var(--btnink);padding:11px 12px;border-radius:9px;font-size:15px;font-weight:600}
+.btn.sec{background:var(--acc2);color:var(--acc)}
+.btn.del{background:transparent;color:#c0392b;border:1px solid var(--line);flex:0 0 auto;padding:6px 10px;font-size:13px}
+svg{display:block;margin:6px auto 0;max-width:190px;width:100%}
+table.m{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+table.m th,table.m td{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left;font-variant-numeric:tabular-nums}
+table.m th{color:var(--mute);font-weight:500;font-size:12px}
+.match{border:1px solid var(--line);border-radius:10px;padding:9px 10px;margin-top:8px}
+.match.best{border-color:var(--ok);box-shadow:0 0 0 1px var(--ok) inset}
+.match b{font-size:16px}
+.match .d{font-size:12px;color:var(--mute);margin-top:2px}
+.li{border-bottom:1px solid var(--line);padding:9px 0;display:grid;grid-template-columns:1fr auto;gap:4px 8px;align-items:center}
+.li .n{font-weight:600}.li .sp{font-size:12px;color:var(--mute)}
+.li input{width:70px;padding:6px;font-size:15px;text-align:center}
+.tot{font-size:15px;font-weight:700;margin-top:10px;text-align:right}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#14212b;color:#fff;padding:10px 16px;border-radius:20px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.on{opacity:.95}
+.sub{font-size:12px;color:var(--mute);font-weight:400}
+footer{font-size:11px;color:var(--mute);text-align:center;padding:0 16px 24px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span class="logo"><img src="data:image/png;base64,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" alt="GRASSCO"></span>
+    <span class="tag">Saha Malzeme Seçimi</span>
+  </div>
+  <nav id="nav">
+    <button data-t="flans" class="on">Flanş</button>
+    <button data-t="civata">Cıvata</button>
+    <button data-t="boru">Boru</button>
+    <button data-t="fit">Fittings</button>
+    <button data-t="liste">Liste<span class="badge" id="badge" hidden>0</span></button>
+  </nav>
+</header>
+
+<main>
+<!-- ============ FLANŞ ============ -->
+<section id="flans" class="on">
+  <div class="card">
+    <h2>Flanş seçimi</h2>
+    <label>Basınç sınıfı</label>
+    <div class="chips" id="f_pn"></div>
+    <div class="row">
+      <div><label>DN</label><select id="f_dn"></select></div>
+      <div><label>Flanş tipi</label><select id="f_tip"></select></div>
+    </div>
+    <div id="f_out"></div>
+    <div class="btns">
+      <button class="btn sec" id="f_tobolt">Cıvatasını hesapla →</button>
+      <button class="btn" id="f_add">Listeye ekle</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>HDPE borudan çelik flanş</h2>
+    <label>HDPE boru dış çapı (mm)</label>
+    <select id="h_pe"></select>
+    <div id="h_out"></div>
+  </div>
+</section>
+
+<!-- ============ CIVATA ============ -->
+<section id="civata">
+  <div class="card">
+    <h2>Cıvata / saplama hesabı</h2>
+    <label>Basınç sınıfı</label>
+    <div class="chips" id="c_pn"></div>
+    <div class="row">
+      <div><label>DN</label><select id="c_dn"></select></div>
+      <div><label>Bağlantı</label><select id="c_bag">
+        <option value="ff">Flanş – flanş</option>
+        <option value="wafer">Flanş – wafer vana – flanş</option>
+        <option value="ara">Flanş – ara eleman – flanş</option>
+      </select></div>
+    </div>
+    <div class="row">
+      <div><label>1. flanş tipi</label><select id="c_t1"></select></div>
+      <div><label>Kalınlık 1 (mm)</label><input id="c_k1" type="number" inputmode="decimal"></div>
+    </div>
+    <div class="row">
+      <div><label>2. flanş tipi</label><select id="c_t2"></select></div>
+      <div><label>Kalınlık 2 (mm)</label><input id="c_k2" type="number" inputmode="decimal"></div>
+    </div>
+    <div id="c_midbox">
+      <div class="row">
+        <div><label id="c_midlbl">Vana gövde boyu (mm)</label><input id="c_mid" type="number" inputmode="decimal"></div>
+        <div><label>Conta adedi</label><select id="c_gn"><option value="0">0 (vana lineri)</option><option value="1">1</option><option value="2">2</option></select></div>
+      </div>
+    </div>
+    <div class="row">
+      <div><label>Conta</label><select id="c_g">
+        <option value="2" data-n="Klingrit conta 2 mm">Klingrit 2 mm</option>
+        <option value="3" data-n="Klingrit conta 3 mm">Klingrit 3 mm</option>
+        <option value="3.0001" data-n="Çelik takviyeli EPDM conta">Çelik takv. EPDM ~3 mm</option>
+        <option value="4.5" data-n="Spiral sarım conta (sıkılmış ~3,3)">Spiral sarım 4,5 mm</option>
+        <option value="0" data-n="">Contasız</option>
+      </select></div>
+      <div><label>Bağlantı elemanı</label><select id="c_tur">
+        <option value="bolt">Cıvata + somun</option>
+        <option value="stud">Saplama + 2 somun</option>
+      </select></div>
+    </div>
+    <div class="row">
+      <div><label>Pul</label><select id="c_pul">
+        <option value="0">Yok</option><option value="1">Tek taraf</option><option value="2" selected>İki taraf</option>
+      </select></div>
+      <div><label>Bağlantı adedi</label><input id="c_adet" type="number" inputmode="numeric" value="1" min="1"></div>
+    </div>
+    <div id="c_out"></div>
+    <div class="btns"><button class="btn" id="c_add">Malzemeleri listeye ekle</button></div>
+  </div>
+</section>
+
+<!-- ============ BORU / SAC ============ -->
+<section id="boru">
+  <div class="card">
+    <h2>Boru ölçü ve ağırlık</h2>
+    <label>Ölçü sistemi</label>
+    <div class="chips" id="p_sys"></div>
+    <div class="row" id="p_selrow">
+      <div><label id="p_szl">Ölçü</label><select id="p_sz"></select></div>
+      <div><label id="p_wl">Et kalınlığı</label><select id="p_w"></select></div>
+    </div>
+    <div class="row">
+      <div><label>Dış çap (mm)</label><input id="p_od" type="number" inputmode="decimal"></div>
+      <div><label>Et kalınlığı (mm)</label><input id="p_t" type="number" inputmode="decimal"></div>
+    </div>
+    <div class="row3">
+      <div><label>Uzunluk (m)</label><input id="p_len" type="number" inputmode="decimal" value="6"></div>
+      <div><label>Adet</label><input id="p_n" type="number" inputmode="numeric" value="1"></div>
+      <div><label>TL/kg</label><input id="p_fiy" type="number" inputmode="decimal" placeholder="ops."></div>
+    </div>
+    <label>Malzeme</label><select id="p_mat" class="mat"></select>
+    <div id="p_out"></div>
+    <div class="btns"><button class="btn" id="p_add">Listeye ekle</button></div>
+  </div>
+  <div class="card">
+    <h2>Levha / sac ağırlık</h2>
+    <div class="row3">
+      <div><label>En (mm)</label><input id="s_en" type="number" inputmode="decimal" value="1500"></div>
+      <div><label>Boy (mm)</label><input id="s_boy" type="number" inputmode="decimal" value="3000"></div>
+      <div><label>Kalınlık (mm)</label><input id="s_t" type="number" inputmode="decimal" value="5"></div>
+    </div>
+    <div class="row3">
+      <div><label>Adet</label><input id="s_n" type="number" inputmode="numeric" value="1"></div>
+      <div><label>TL/kg</label><input id="s_fiy" type="number" inputmode="decimal" placeholder="ops."></div>
+      <div><label>Malzeme</label><select id="s_mat" class="mat"></select></div>
+    </div>
+    <div id="s_out"></div>
+    <div class="btns"><button class="btn" id="s_add">Listeye ekle</button></div>
+  </div>
+</section>
+
+<!-- ============ FITTINGS ============ -->
+<section id="fit">
+  <div class="card">
+    <h2>Fittings ölçü ve ağırlık</h2>
+    <label>Parça</label>
+    <select id="g_tip">
+      <option value="e90lr">90° patent dirsek (LR, R=1,5D)</option>
+      <option value="e45lr">45° patent dirsek (LR)</option>
+      <option value="e180lr">180° dönüş dirseği (LR)</option>
+      <option value="e90sr">90° kısa dirsek (SR, R=1D)</option>
+      <option value="tee">Eşit tee</option>
+      <option value="conc">Konsantrik redüksiyon</option>
+      <option value="ecc">Eksantrik redüksiyon</option>
+      <option value="cap">Kep / bombe</option>
+    </select>
+    <label>Ölçü sistemi</label>
+    <div class="chips" id="g_sys"></div>
+    <div class="row">
+      <div><label id="g_szl">Ölçü</label><select id="g_sz"></select></div>
+      <div id="g_sz2box"><label>Küçük uç</label><select id="g_sz2"></select></div>
+    </div>
+    <div class="row">
+      <div><label>Et kalınlığı</label><select id="g_w"></select></div>
+      <div><label>Et (mm)</label><input id="g_t" type="number" inputmode="decimal"></div>
+    </div>
+    <div class="row">
+      <div><label>Malzeme</label><select id="g_mat" class="mat"></select></div>
+      <div><label>Adet</label><input id="g_n" type="number" inputmode="numeric" value="1"></div>
+    </div>
+    <div id="g_out"></div>
+    <div class="btns"><button class="btn" id="g_add">Listeye ekle</button></div>
+  </div>
+</section>
+
+<!-- ============ LİSTE ============ -->
+<section id="liste">
+  <div class="card">
+    <h2>Malzeme listesi</h2>
+    <label>İş / hat adı</label>
+    <input id="l_is" placeholder="örn. Kazan dairesi kollektör">
+    <div id="l_out"></div>
+    <div class="btns">
+      <button class="btn" id="l_share">Paylaş / kopyala</button>
+      <button class="btn sec" id="l_csv">CSV indir</button>
+      <button class="btn sec" id="l_clr">Temizle</button>
+    </div>
+  </div>
+</section>
+</main>
+<footer>Değerler EN 1092-1, EN 1514-1, EN 10220, ASME B36.10/B36.19, ASME B16.9, ISO 4014/4032/7089 ve EN 558'e dayanır. Flanş kalınlıkları ve ağırlıklar tipik değerdir. Kritik siparişte üretici kataloğuyla teyit edin.</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ================= VERİ ================= */
+const DNS=[10,15,20,25,32,40,50,65,80,100,125,150,200,250,300,350,400,450,500,600,700,800,900,1000];
+const NPS={10:'3/8"',15:'1/2"',20:'3/4"',25:'1"',32:'1¼"',40:'1½"',50:'2"',65:'2½"',80:'3"',100:'4"',125:'5"',150:'6"',200:'8"',250:'10"',300:'12"',350:'14"',400:'16"',450:'18"',500:'20"',600:'24"',700:'28"',800:'32"',900:'36"',1000:'40"'};
+const EN_OD={10:17.2,15:21.3,20:26.9,25:33.7,32:42.4,40:48.3,50:60.3,65:76.1,80:88.9,100:114.3,125:139.7,150:168.3,200:219.1,250:273,300:323.9,350:355.6,400:406.4,450:457,500:508,600:610,700:711,800:813,900:914,1000:1016};
+const RP={15:'Rp ½',20:'Rp ¾',25:'Rp 1',32:'Rp 1¼',40:'Rp 1½',50:'Rp 2',65:'Rp 2½',80:'Rp 3',100:'Rp 4',125:'Rp 5',150:'Rp 6'};
+// EN 1092-1 bağlantı ölçüleri: [D, K, delik L, delik sayısı n, cıvata M]
+const CONN={
+ PN6:{10:[75,50,11,4,10],15:[80,55,11,4,10],20:[90,65,11,4,10],25:[100,75,11,4,10],32:[120,90,14,4,12],40:[130,100,14,4,12],50:[140,110,14,4,12],65:[160,130,14,4,12],80:[190,150,18,4,16],100:[210,170,18,4,16],125:[240,200,18,8,16],150:[265,225,18,8,16],200:[320,280,18,8,16],250:[375,335,18,12,16],300:[440,395,22,12,20],350:[490,445,22,12,20],400:[540,495,22,16,20],450:[595,550,22,16,20],500:[645,600,22,20,20],600:[755,705,26,20,24],700:[860,810,26,24,24],800:[975,920,30,24,27],900:[1075,1020,30,24,27],1000:[1175,1120,30,28,27]},
+ PN10:{10:[90,60,14,4,12],15:[95,65,14,4,12],20:[105,75,14,4,12],25:[115,85,14,4,12],32:[140,100,18,4,16],40:[150,110,18,4,16],50:[165,125,18,4,16],65:[185,145,18,8,16],80:[200,160,18,8,16],100:[220,180,18,8,16],125:[250,210,18,8,16],150:[285,240,22,8,20],200:[340,295,22,8,20],250:[395,350,22,12,20],300:[445,400,22,12,20],350:[505,460,22,16,20],400:[565,515,26,16,24],450:[615,565,26,20,24],500:[670,620,26,20,24],600:[780,725,30,20,27],700:[895,840,30,24,27],800:[1015,950,33,24,30],900:[1115,1050,33,28,30],1000:[1230,1160,36,28,33]},
+ PN16:{10:[90,60,14,4,12],15:[95,65,14,4,12],20:[105,75,14,4,12],25:[115,85,14,4,12],32:[140,100,18,4,16],40:[150,110,18,4,16],50:[165,125,18,4,16],65:[185,145,18,8,16],80:[200,160,18,8,16],100:[220,180,18,8,16],125:[250,210,18,8,16],150:[285,240,22,8,20],200:[340,295,22,12,20],250:[405,355,26,12,24],300:[460,410,26,12,24],350:[520,470,26,16,24],400:[580,525,30,16,27],450:[640,585,30,20,27],500:[715,650,33,20,30],600:[840,770,36,20,33],700:[910,840,36,24,33],800:[1025,950,39,24,36],900:[1125,1050,39,28,36],1000:[1255,1170,42,28,39]},
+ PN25:{10:[90,60,14,4,12],15:[95,65,14,4,12],20:[105,75,14,4,12],25:[115,85,14,4,12],32:[140,100,18,4,16],40:[150,110,18,4,16],50:[165,125,18,4,16],65:[185,145,18,8,16],80:[200,160,18,8,16],100:[235,190,22,8,20],125:[270,220,26,8,24],150:[300,250,26,8,24],200:[360,310,26,12,24],250:[425,370,30,12,27],300:[485,430,30,16,27],350:[555,490,33,16,30],400:[620,550,36,16,33],450:[670,600,36,20,33],500:[730,660,36,20,33],600:[845,770,39,20,36]},
+ PN40:{10:[90,60,14,4,12],15:[95,65,14,4,12],20:[105,75,14,4,12],25:[115,85,14,4,12],32:[140,100,18,4,16],40:[150,110,18,4,16],50:[165,125,18,4,16],65:[185,145,18,8,16],80:[200,160,18,8,16],100:[235,190,22,8,20],125:[270,220,26,8,24],150:[300,250,26,8,24],200:[375,320,30,12,27],250:[450,385,33,12,30],300:[515,450,33,16,30],350:[580,510,36,16,33],400:[660,585,39,16,36],450:[685,610,39,20,36],500:[755,670,42,20,39],600:[890,795,48,20,45]}
+};
+const PNS=Object.keys(CONN);
+const D20=[10,15,20,25,32,40,50,65,80,100,125,150,200,250,300,350,400,450,500,600];
+const mk=a=>Object.fromEntries(D20.map((d,i)=>[d,a[i]]));
+// Conta yüzeyi (RF, Form B) d1
+const RF={PN6:mk([35,40,50,60,70,80,90,110,128,148,178,202,258,312,365,415,465,520,570,670]),
+ PN10:mk([40,45,58,68,78,88,102,122,138,158,188,212,268,320,370,430,482,532,585,685]),
+ PN16:mk([40,45,58,68,78,88,102,122,138,158,188,212,268,320,378,438,490,550,610,725]),
+ PN25:mk([40,45,58,68,78,88,102,122,138,162,188,218,278,335,395,450,505,555,615,720]),
+ PN40:mk([40,45,58,68,78,88,102,122,138,162,188,218,285,345,410,465,535,560,615,735])};
+// Tipik kalınlıklar: T01 düz plaka, C2 kör/kaynak boyunlu
+const T01={PN6:mk([12,12,14,14,16,16,16,16,18,18,20,20,22,24,24,26,28,28,30,30]),
+ PN10:mk([14,14,16,16,18,18,19,20,20,22,22,24,24,26,26,28,32,36,38,42]),
+ PN16:mk([14,14,16,16,18,18,19,20,20,22,22,24,26,29,32,35,38,42,46,55]),
+ PN25:mk([16,16,18,18,20,20,22,24,26,28,30,32,34,38,42,46,50,56,60,68]),
+ PN40:mk([16,16,18,18,20,20,22,24,26,28,30,32,36,42,48,54,58,62,66,76])};
+const C2={PN6:mk([12,12,14,14,14,14,14,14,16,16,18,18,20,22,22,22,22,24,24,30]),
+ PN10:mk([16,16,18,18,18,18,18,18,20,20,22,22,24,26,26,26,26,28,28,34]),
+ PN16:mk([16,16,18,18,18,18,18,18,20,20,22,22,24,26,28,30,32,40,44,54]),
+ PN25:mk([16,16,18,18,18,18,20,22,24,24,26,28,30,32,34,38,40,46,48,58]),
+ PN40:mk([16,16,18,18,18,18,20,22,24,24,26,28,34,38,42,46,50,57,57,72])};
+const B1=mk([18,22,27.6,34.4,43.1,49,61.1,77.1,90.3,115.9,141.6,170.5,221.8,276.2,327.6,359.7,411,462.3,513.6,616.5]);
+const IBC_IN={10:18,15:22,20:27,25:34,32:43,40:49,50:61,65:77,80:89,100:115,125:141,150:169,200:220,250:273,300:324,350:356,400:407,450:458,500:508,600:610,700:712,800:813,900:915,1000:1016};
+const TIPLER={t01:'Düz (Tip 01, plaka)',t11:'Kaynak boyunlu (Tip 11)',t05:'Kör (Tip 05)',t02:'Serbest / döner (Tip 02)',t13:'Dişli (Tip 13)'};
+function kal(tip,pn,dn){const t=(tip==='t11'||tip==='t05')?C2:T01;return t[pn]&&t[pn][dn]!=null?t[pn][dn]:null}
+
+// Cıvata verisi: somun yüksekliği m (ISO 4032), pul h ve dış çap (ISO 7089), adım, anahtar ağzı (ISO), DIN alternatif
+const BOLT={10:{m:8.4,w:2,wd:20,p:1.5,s:16,din:17},12:{m:10.8,w:2.5,wd:24,p:1.75,s:18,din:19},16:{m:14.8,w:3,wd:30,p:2,s:24},20:{m:18,w:3,wd:37,p:2.5,s:30},24:{m:21.5,w:4,wd:44,p:3,s:36},27:{m:23.8,w:4,wd:50,p:3,s:41},30:{m:25.6,w:4,wd:56,p:3.5,s:46},33:{m:28.7,w:5,wd:60,p:3.5,s:50},36:{m:31,w:5,wd:66,p:4,s:55},39:{m:33.4,w:6,wd:72,p:4,s:60},45:{m:36,w:8,wd:85,p:4.5,s:70}};
+const BL_STD=[30,35,40,45,50,55,60,65,70,75,80,90,100,110,120,130,140,150,160,180,200,220,240,260,280,300];
+// EN 558 seri 20 (wafer kelebek vana) gövde boyu
+const WAFER={40:33,50:43,65:46,80:46,100:52,125:56,150:56,200:60,250:68,300:78,350:78,400:102,450:114,500:127,600:154,700:165,800:190,900:203,1000:216};
+// HDPE dış çap -> tipik çelik flanş DN
+const HDPE=[[32,25],[40,32],[50,40],[63,50],[75,65],[90,80],[110,100],[125,100],[140,125],[160,150],[180,150],[200,200],[225,200],[250,250],[280,250],[315,300],[355,350],[400,400],[450,450],[500,500],[560,500],[630,600],[710,700],[800,800],[900,900],[1000,1000]];
+
+// ASME ölçüleri (19 ölçü)
+const AS=['1/2"','3/4"','1"','1¼"','1½"','2"','2½"','3"','4"','5"','6"','8"','10"','12"','14"','16"','18"','20"','24"'];
+const AS_DN=[15,20,25,32,40,50,65,80,100,125,150,200,250,300,350,400,450,500,600];
+const AS_OD=[21.3,26.7,33.4,42.2,48.3,60.3,73.0,88.9,114.3,141.3,168.3,219.1,273.0,323.8,355.6,406.4,457.0,508.0,610.0];
+const n_=null;
+const SCH={
+ '5S':[1.65,1.65,1.65,1.65,1.65,1.65,2.11,2.11,2.11,2.77,2.77,2.77,3.40,3.96,3.96,4.19,4.19,4.78,5.54],
+ '10S':[2.11,2.11,2.77,2.77,2.77,2.77,3.05,3.05,3.05,3.40,3.40,3.76,4.19,4.57,4.78,4.78,4.78,5.54,6.35],
+ '10':[2.11,2.11,2.77,2.77,2.77,2.77,3.05,3.05,3.05,3.40,3.40,3.76,4.19,4.57,6.35,6.35,6.35,6.35,6.35],
+ '20':[n_,n_,n_,n_,n_,n_,n_,n_,n_,n_,n_,6.35,6.35,6.35,7.92,7.92,7.92,9.53,9.53],
+ '30':[n_,n_,n_,n_,n_,n_,n_,n_,n_,n_,n_,7.04,7.80,8.38,9.53,9.53,11.13,12.70,14.27],
+ 'STD':[2.77,2.87,3.38,3.56,3.68,3.91,5.16,5.49,6.02,6.55,7.11,8.18,9.27,9.53,9.53,9.53,9.53,9.53,9.53],
+ '40':[2.77,2.87,3.38,3.56,3.68,3.91,5.16,5.49,6.02,6.55,7.11,8.18,9.27,10.31,11.13,12.70,14.27,15.09,17.48],
+ '40S':[2.77,2.87,3.38,3.56,3.68,3.91,5.16,5.49,6.02,6.55,7.11,8.18,9.27,9.53,n_,n_,n_,n_,n_],
+ '60':[n_,n_,n_,n_,n_,n_,n_,n_,n_,n_,n_,10.31,12.70,14.27,15.09,16.66,19.05,20.62,24.61],
+ 'XS':[3.73,3.91,4.55,4.85,5.08,5.54,7.01,7.62,8.56,9.53,10.97,12.70,12.70,12.70,12.70,12.70,12.70,12.70,12.70],
+ '80':[3.73,3.91,4.55,4.85,5.08,5.54,7.01,7.62,8.56,9.53,10.97,12.70,15.09,17.48,19.05,21.44,23.83,26.19,30.96],
+ '80S':[3.73,3.91,4.55,4.85,5.08,5.54,7.01,7.62,8.56,9.53,10.97,12.70,12.70,12.70,n_,n_,n_,n_,n_],
+ '100':[n_,n_,n_,n_,n_,n_,n_,n_,n_,n_,n_,15.09,18.26,21.44,23.83,26.19,29.36,32.54,38.89],
+ '120':[n_,n_,n_,n_,n_,n_,n_,n_,11.13,12.70,14.27,18.26,21.44,25.40,27.79,30.96,34.93,38.10,46.02],
+ '140':[n_,n_,n_,n_,n_,n_,n_,n_,n_,n_,n_,20.62,25.40,28.58,31.75,36.53,39.67,44.45,52.37],
+ '160':[4.78,5.56,6.35,6.35,7.14,8.74,9.53,11.13,13.49,15.88,18.26,23.01,28.58,33.32,35.71,40.49,45.24,50.01,59.54],
+ 'XXS':[7.47,7.82,9.09,9.70,10.15,11.07,14.02,15.24,17.12,19.05,21.95,22.23,25.40,25.40,n_,n_,n_,n_,n_]
+};
+const SCH_ORDER=['5S','10S','10','20','30','STD','40','40S','60','XS','80','80S','100','120','140','160','XXS'];
+// EN boru: tipik et ve et listesi
+const EN_WALL_DEF={10:2.0,15:2.6,20:2.6,25:3.2,32:3.2,40:3.2,50:3.6,65:3.6,80:4.0,100:4.5,125:5.0,150:5.6,200:6.3,250:6.3,300:7.1,350:8.0,400:8.8,450:10,500:10,600:11,700:12.5,800:14.2,900:16,1000:16};
+const EN_WALLS=[1.6,2.0,2.3,2.6,2.9,3.2,3.6,4.0,4.5,5.0,5.6,6.3,7.1,8.0,8.8,10,11,12.5,14.2,16,17.5,20];
+// ASME B16.9 fittings (mm), AS sırasıyla
+const A90LR=[38,29,38,48,57,76,95,114,152,190,229,305,381,457,533,610,686,762,914];
+const B45LR=[16,19,22,25,29,35,44,51,64,79,95,127,159,190,222,254,286,318,381];
+const A90SR=[n_,n_,25,32,38,51,64,76,102,127,152,203,254,305,356,406,457,508,610];
+const TEE_C=[25,29,38,48,57,64,76,86,105,124,143,178,216,254,279,305,343,381,432];
+const RED_H=[n_,38,51,51,64,76,89,89,102,127,140,152,178,203,330,356,381,508,508];
+const CAP_E=[25,25,38,38,38,38,38,51,64,76,89,102,127,152,165,178,203,229,267];
+const MATS=[['Karbon çelik',7.85],['Paslanmaz 304',7.93],['Paslanmaz 316',7.98],['Alüminyum',2.70],['Bakır',8.96],['Pirinç',8.50],['Dökme demir',7.20]];
+
+/* ================= YARDIMCI ================= */
+const $=id=>document.getElementById(id);
+const nf=(v,d=1)=>v==null||isNaN(v)?'–':Number(v).toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const nf0=v=>nf(v,0);
+const num=el=>{const v=parseFloat(String(el.value).replace(',','.'));return isNaN(v)?null:v};
+const opt=(sel,items,val)=>{sel.innerHTML=items.map(([v,t])=>`<option value="${v}">${t}</option>`).join('');if(val!=null&&[...sel.options].some(o=>o.value==val))sel.value=val};
+function chips(el,items,val,cb){el.innerHTML=items.map(([v,t])=>`<button data-v="${v}" class="${v==val?'on':''}">${t}</button>`).join('');el.onclick=e=>{const b=e.target.closest('button');if(!b)return;[...el.children].forEach(x=>x.classList.toggle('on',x===b));cb(b.dataset.v)};}
+const kv=rows=>`<div class="kv">${rows.filter(Boolean).map(([k,v])=>`<div>${k}</div><div>${v}</div>`).join('')}</div>`;
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1600)}
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+document.querySelectorAll('select.mat').forEach(s=>opt(s,MATS.map((m,i)=>[i,m[0]]),0));
+
+/* ================= SEKME ================= */
+$('nav').onclick=e=>{const b=e.target.closest('button');if(!b)return;go(b.dataset.t)};
+function go(t){document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x.dataset.t===t));document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===t));window.scrollTo(0,0);if(t==='liste')renderList()}
+
+/* ================= FLANŞ ================= */
+const F={pn:'PN16',dn:100,tip:'t01'};
+function flangeWeight(tip,pn,dn,t){
+  const [D,K,L,n]=CONN[pn][dn];const od=EN_OD[dn];
+  const plate=(bore)=>(Math.PI/4*(D*D-bore*bore)-n*Math.PI/4*L*L)*t*7.85e-6;
+  if(tip==='t05')return{kg:plate(0),yak:false};
+  if(tip==='t11')return{kg:plate(od)*1.2,yak:true};
+  if(tip==='t02')return{kg:plate(od+Math.max(6,od*.06)),yak:true};
+  return{kg:plate(B1[dn]||od+1),yak:tip==='t13'};
+}
+function flangeSVG(pn,dn){
+  const [D,K,L,n]=CONN[pn][dn];const s=240/D,c=130;const rf=RF[pn]&&RF[pn][dn];const bore=EN_OD[dn];
+  let h='';for(let i=0;i<n;i++){const a=Math.PI*2*i/n+Math.PI/n;h+=`<circle cx="${c+Math.cos(a)*K/2*s}" cy="${c+Math.sin(a)*K/2*s}" r="${L/2*s}" fill="var(--bg)" stroke="var(--ink)" stroke-width="1.2"/>`}
+  return `<svg viewBox="0 0 260 260"><circle cx="${c}" cy="${c}" r="${D/2*s}" fill="var(--acc2)" stroke="var(--ink)" stroke-width="1.5"/>
+  ${rf?`<circle cx="${c}" cy="${c}" r="${rf/2*s}" fill="none" stroke="var(--acc)" stroke-width="1"/>`:''}
+  <circle cx="${c}" cy="${c}" r="${K/2*s}" fill="none" stroke="var(--mute)" stroke-dasharray="4 3"/>
+  ${F.tip==='t05'?'':`<circle cx="${c}" cy="${c}" r="${bore/2*s}" fill="var(--bg)" stroke="var(--ink)" stroke-width="1.2"/>`}${h}
+  <text x="${c}" y="${c+4}" text-anchor="middle" font-size="12" fill="var(--ink)" font-weight="600">DN${dn} ${pn}</text></svg>`;
+}
+function fillDN(sel,pn,val){opt(sel,Object.keys(CONN[pn]).map(d=>[d,`DN${d}  (${NPS[d]})`]),val)}
+function renderFlange(){
+  const {pn,tip}=F;const dn=+$('f_dn').value;F.dn=dn;const [D,K,L,n,M]=CONN[pn][dn];
+  const t=kal(tip,pn,dn);const w=t?flangeWeight(tip,pn,dn,t):null;const B=BOLT[M];
+  const rf=RF[pn]&&RF[pn][dn];
+  let h=flangeSVG(pn,dn);
+  h+=`<div class="big"><div class="t">Cıvata</div><div class="v">${n} × M${M}</div><div class="s">Delik Ø${L} · anahtar ağzı ${B.s} mm${B.din?` (DIN ${B.din})`:''}</div></div>`;
+  h+=kv([['Dış çap D',nf0(D)+' mm'],['Delik merkez çapı K',nf0(K)+' mm'],['Delik çapı L × adet',`Ø${L} × ${n}`],
+   rf?['Conta yüzü d1 (RF)',nf0(rf)+' mm']:null,
+   ['Kalınlık (tipik)',t?nf0(t)+' mm':'katalogdan alın'],
+   tip!=='t05'?['Boru dış çapı (EN 10220)',nf(EN_OD[dn])+' mm']:null,
+   tip==='t01'&&B1[dn]?['İç delik B1 (tipik)',nf(B1[dn])+' mm']:null,
+   tip==='t13'&&RP[dn]?['Diş',RP[dn]+' (BSP)']:null,
+   ['Klingrit/EPDM conta (IBC)',`Ø${IBC_IN[dn]} / Ø${K-L} mm`],
+   ['Tam yüzey conta',`Ø${IBC_IN[dn]} / Ø${D}, ${n}×Ø${L}`],
+   w?['Ağırlık',(w.yak?'≈ ':'')+nf(w.kg)+' kg']:null]);
+  if(tip==='t13'&&!RP[dn])h+=`<div class="warn">Dişli flanş genelde DN150'ye kadar üretilir.</div>`;
+  if(tip==='t02')h+=`<div class="note">Serbest flanşta cıvata boyuna kaynak ring/stub end kalınlığı da girer; Cıvata sekmesinde kalınlığa ekleyin.</div>`;
+  if(w&&w.yak)h+=`<div class="note">≈ işaretli ağırlık kaba tahmindir (±%20).</div>`;
+  $('f_out').innerHTML=h;
+}
+chips($('f_pn'),PNS.map(p=>[p,p]),F.pn,v=>{F.pn=v;fillDN($('f_dn'),v,F.dn);renderFlange()});
+opt($('f_tip'),Object.entries(TIPLER),F.tip);
+fillDN($('f_dn'),F.pn,F.dn);
+$('f_dn').onchange=renderFlange;$('f_tip').onchange=()=>{F.tip=$('f_tip').value;renderFlange()};
+$('f_add').onclick=()=>{const dn=F.dn,t=kal(F.tip,F.pn,dn);const w=t?flangeWeight(F.tip,F.pn,dn,t).kg:0;
+  addItem(`Flanş ${TIPLER[F.tip].split(' (')[0]}`,`DN${dn} ${F.pn} EN 1092-1`,1,'ad',w)};
+$('f_tobolt').onclick=()=>{C.pn=F.pn;chips($('c_pn'),PNS.map(p=>[p,p]),C.pn,cPN);fillDN($('c_dn'),C.pn,F.dn);$('c_t1').value=F.tip==='t13'?'t01':F.tip;$('c_t2').value=$('c_t1').value;setThick();go('civata');renderBolt()};
+// HDPE
+opt($('h_pe'),HDPE.map(([pe,dn])=>[pe,`Ø${pe} mm`]),110);
+function renderHdpe(){const pe=+$('h_pe').value;const dn=HDPE.find(x=>x[0]===pe)[1];
+ $('h_out').innerHTML=`<div class="big"><div class="t">Tipik çelik flanş</div><div class="v">DN${dn}</div><div class="s">${NPS[dn]} · PN10: ${CONN.PN10[dn][3]}×M${CONN.PN10[dn][4]} · PN16: ${CONN.PN16[dn][3]}×M${CONN.PN16[dn][4]}</div></div><div class="note">HDPE adaptör (flanş adaptörü / stub end) ile kullanılan serbest flanş. Üreticiye göre bir alt/üst DN olabilir, adaptörün flanş ölçüsünü kontrol edin.</div>`}
+$('h_pe').onchange=renderHdpe;
+
+/* ================= CIVATA ================= */
+const C={pn:'PN16'};
+function cPN(v){C.pn=v;fillDN($('c_dn'),v,$('c_dn').value);setThick();renderBolt()}
+chips($('c_pn'),PNS.map(p=>[p,p]),C.pn,cPN);
+fillDN($('c_dn'),C.pn,100);
+const BT=Object.entries(TIPLER).filter(([k])=>k!=='t13');
+opt($('c_t1'),BT,'t01');opt($('c_t2'),BT,'t01');
+function setThick(){const dn=+$('c_dn').value;
+  for(const i of [1,2]){const t=kal($('c_t'+i).value,C.pn,dn);$('c_k'+i).value=t!=null?t:''}
+  if($('c_bag').value==='wafer')$('c_mid').value=WAFER[dn]||'';}
+function bagUI(){const b=$('c_bag').value;$('c_midbox').style.display=b==='ff'?'none':'block';
+  $('c_midlbl').textContent=b==='wafer'?'Vana gövde boyu (mm)':'Ara eleman kalınlığı (mm)';
+  $('c_gn').value=b==='wafer'?'0':'2';if(b==='wafer'){$('c_tur').value='stud';$('c_mid').value=WAFER[+$('c_dn').value]||''}else if(b==='ara')$('c_mid').value='';}
+$('c_dn').onchange=()=>{setThick();renderBolt()};
+['c_t1','c_t2'].forEach(id=>$(id).onchange=()=>{setThick();renderBolt()});
+$('c_bag').onchange=()=>{bagUI();renderBolt()};
+['c_k1','c_k2','c_mid','c_gn','c_g','c_tur','c_pul','c_adet'].forEach(id=>$(id).oninput=renderBolt);
+function boltMass(M,L,stud){const d=M,s=BOLT[M].s;const shank=Math.PI/4*d*d*L;const head=stud?0:0.866*s*s*0.7*d;return(shank+head)*7.85e-6}
+function nutMass(M){const s=BOLT[M].s,m=BOLT[M].m;return(0.866*s*s-Math.PI/4*M*M)*m*7.85e-6}
+function washerMass(M){const b=BOLT[M];return Math.PI/4*(b.wd*b.wd-(M+1)*(M+1))*b.w*7.85e-6}
+let lastBolt=null;
+function renderBolt(){
+  const dn=+$('c_dn').value,pn=C.pn;const [D,K,L,n,M]=CONN[pn][dn];const B=BOLT[M];
+  const t1=num($('c_k1')),t2=num($('c_k2'));const bag=$('c_bag').value;
+  const mid=bag==='ff'?0:(num($('c_mid'))||0);
+  const gsel=$('c_g');const g=Math.round(parseFloat(gsel.value)*10)/10;const gName=gsel.options[gsel.selectedIndex].dataset.n;
+  const gn=bag==='ff'?(g>0?1:0):(g>0?+$('c_gn').value:0);
+  const tur=$('c_tur').value,pul=+$('c_pul').value;const adet=Math.max(1,parseInt($('c_adet').value)||1);
+  if(t1==null||t2==null){$('c_out').innerHTML='<div class="warn">Flanş kalınlıklarını girin.</div>';lastBolt=null;return}
+  const grip=t1+t2+g*gn+mid;const tas=2*B.p;
+  let Lreq,Lsel;let h='';
+  if(tur==='bolt'){Lreq=grip+pul*B.w+B.m+tas;Lsel=BL_STD.find(x=>x>=Lreq)||Math.ceil(Lreq/10)*10}
+  else{Lreq=grip+pul*B.w+2*B.m+2*tas;Lsel=Math.ceil(Lreq/5)*5}
+  const elem=tur==='bolt'?'Cıvata':'Saplama';
+  h+=`<div class="big"><div class="t">${elem} (her bağlantı)</div><div class="v">${n} × M${M} × ${Lsel}</div><div class="s">Hesaplanan ${nf(Lreq)} mm → ${tur==='bolt'?'standart boya':'5 mm\'ye'} yuvarlandı</div></div>`;
+  let thr='';
+  if(tur==='bolt'){const b=Lsel<=125?2*M+6:Lsel<=200?2*M+12:2*M+25;const shank=Lsel-b;const need=grip+pul*B.w;
+    thr=shank>need-B.p?`Kısmi dişte (ISO 4014 / DIN 931) diş boyu ${b} mm, somunun oturması için yetmiyor → <b>tam diş (ISO 4017 / DIN 933)</b> kullanın.`:`Kısmi diş (ISO 4014 / DIN 931) uygun; diş boyu ${b} mm.`}
+  else if(bag==='wafer')thr='Wafer vanada saplama gövdedeki deliklerden ya da yanından geçer; lug tipi vanada her iki flanşa ayrı kısa cıvata gerekir.';
+  const nuts=tur==='bolt'?n:2*n;const wash=pul*n;
+  h+=kv([['Tutulan kalınlık',`${nf(t1)} + ${nf(t2)}${gn?` + ${gn}×${nf(g)} conta`:''}${mid?` + ${nf(mid)}`:''} = ${nf(grip)} mm`],
+    ['Somun (ISO 4032) yük.',nf(B.m)+' mm'],pul?['Pul (ISO 7089)',`${nf(B.w)} mm · Ø${B.wd}`]:null,['Diş taşması (2 diş)',nf(tas)+' mm'],
+    ['Anahtar ağzı',`${B.s} mm${B.din?` (DIN ${B.din})`:''}`]]);
+  h+=`<div class="note">${thr}</div>`;
+  h+=`<h3>${adet} bağlantı için malzeme</h3><table class="m"><tr><th>Malzeme</th><th>Adet</th></tr>
+   <tr><td>${elem} M${M}×${Lsel}</td><td>${n*adet}</td></tr><tr><td>Somun M${M}</td><td>${nuts*adet}</td></tr>
+   ${pul?`<tr><td>Pul M${M}</td><td>${wash*adet}</td></tr>`:''}
+   ${gn?`<tr><td>${gName} DN${dn} ${pn} (Ø${IBC_IN[dn]}/Ø${K-L})</td><td>${gn*adet}</td></tr>`:''}</table>`;
+  if(dn>=700&&(t1==null||t2==null))h+='<div class="warn">DN700 üzeri için kalınlıkları katalogdan girin.</div>';
+  $('c_out').innerHTML=h;
+  lastBolt={dn,pn,M,Lsel,n,nuts,wash,gn,gName,elem,adet,K,L,tur,
+    kgB:boltMass(M,Lsel,tur==='stud'),kgN:nutMass(M),kgW:washerMass(M)};
+}
+$('c_add').onclick=()=>{const b=lastBolt;if(!b)return;const a=b.adet;
+  addItem(`${b.elem} M${b.M}×${b.Lsel}`,`DN${b.dn} ${b.pn} · 8.8 / A2`,b.n*a,'ad',b.kgB,true);
+  addItem(`Somun M${b.M}`,'ISO 4032',b.nuts*a,'ad',b.kgN,true);
+  if(b.wash)addItem(`Pul M${b.M}`,'ISO 7089',b.wash*a,'ad',b.kgW,true);
+  if(b.gn)addItem(b.gName,`DN${b.dn} ${b.pn} · Ø${IBC_IN[b.dn]}/Ø${b.K-b.L}`,b.gn*a,'ad',0,true);
+  saveList();toast('Listeye eklendi')};
+
+/* ================= BORU ================= */
+const P={sys:'en'};
+chips($('p_sys'),[['en','EN (DN)'],['as','ASME (NPS/SCH)'],['ser','Serbest']],'en',v=>{P.sys=v;pSys()});
+function pSys(){const s=P.sys;$('p_selrow').style.display=s==='ser'?'none':'grid';
+  if(s==='en'){$('p_szl').textContent='DN';opt($('p_sz'),DNS.map(d=>[d,`DN${d} · Ø${nf(EN_OD[d])}`]),100);pSize()}
+  else if(s==='as'){$('p_szl').textContent='NPS';opt($('p_sz'),AS.map((a,i)=>[i,`${a} · Ø${nf(AS_OD[i])}`]),8);pSize()}
+  renderPipe()}
+function pSize(){const s=P.sys,v=$('p_sz').value;
+  if(s==='en'){const dn=+v;$('p_od').value=EN_OD[dn];opt($('p_w'),EN_WALLS.map(w=>[w,nf(w)+' mm'+(w===EN_WALL_DEF[dn]?' (tipik)':'')]),EN_WALL_DEF[dn]);$('p_t').value=$('p_w').value}
+  else{const i=+v;$('p_od').value=AS_OD[i];opt($('p_w'),SCH_ORDER.filter(k=>SCH[k][i]!=null).map(k=>[k,`SCH ${k} · ${nf(SCH[k][i],2)}`]),SCH['40'][i]!=null?'40':'STD');$('p_t').value=SCH[$('p_w').value][i]}
+  renderPipe()}
+$('p_sz').onchange=pSize;
+$('p_w').onchange=()=>{const v=$('p_w').value;$('p_t').value=P.sys==='en'?v:SCH[v][+$('p_sz').value];renderPipe()};
+['p_od','p_t','p_len','p_n','p_fiy','p_mat'].forEach(id=>$(id).oninput=renderPipe);
+let lastPipe=null;
+function pipeName(){const s=P.sys,v=$('p_sz').value;
+  if(s==='en')return`Boru DN${v} Ø${nf(num($('p_od')))}×${nf(num($('p_t')))}`;
+  if(s==='as')return`Boru ${AS[+v]} SCH ${$('p_w').value} (Ø${nf(num($('p_od')))}×${nf(num($('p_t')),2)})`;
+  return`Boru Ø${nf(num($('p_od')))}×${nf(num($('p_t')))}`}
+function renderPipe(){
+  const od=num($('p_od')),t=num($('p_t')),L=num($('p_len'))||0,n=parseInt($('p_n').value)||1,f=num($('p_fiy'));const m=MATS[+$('p_mat').value];
+  if(!od||!t||t*2>=od){$('p_out').innerHTML='<div class="warn">Dış çap ve et kalınlığını kontrol edin.</div>';lastPipe=null;return}
+  const id=od-2*t;const kgm=Math.PI*(od-t)*t*m[1]/1000;const tot=kgm*L*n;const vol=Math.PI/4*id*id/1e6*1000;
+  const surf=Math.PI*od/1000;
+  let h=`<div class="big"><div class="t">${m[0]} · ${nf(L)} m × ${n} adet</div><div class="v">${nf(tot,1)} kg</div><div class="s">${nf(kgm,2)} kg/m${f?` · ${nf(tot*f,0)} TL`:''}</div></div>`;
+  h+=kv([['Dış / iç çap',`Ø${nf(od)} / Ø${nf(id)} mm`],['Et kalınlığı',nf(t,2)+' mm'],['İç hacim',nf(vol,2)+' L/m'],
+    ['Su dolu ağırlık',nf(kgm+vol,2)+' kg/m'],['Dış yüzey (boya)',nf(surf,3)+' m²/m · toplam '+nf(surf*L*n,1)+' m²'],
+    ['Toplam boy',nf(L*n,1)+' m']]);
+  $('p_out').innerHTML=h;lastPipe={name:pipeName(),mat:m[0],L,n,kgm};
+}
+$('p_add').onclick=()=>{const p=lastPipe;if(!p)return;addItem(p.name,p.mat,+(p.L*p.n).toFixed(2),'m',p.kgm)};
+// SAC
+['s_en','s_boy','s_t','s_n','s_fiy','s_mat'].forEach(id=>$(id).oninput=renderSac);
+let lastSac=null;
+function renderSac(){const en=num($('s_en')),boy=num($('s_boy')),t=num($('s_t')),n=parseInt($('s_n').value)||1,f=num($('s_fiy'));const m=MATS[+$('s_mat').value];
+  if(!en||!boy||!t){$('s_out').innerHTML='';lastSac=null;return}
+  const kg=en*boy*t*m[1]/1e6;const tot=kg*n;
+  $('s_out').innerHTML=`<div class="big"><div class="t">${m[0]} · ${n} adet</div><div class="v">${nf(tot,1)} kg</div><div class="s">${nf(kg,2)} kg/adet · ${nf(t*m[1],2)} kg/m²${f?` · ${nf(tot*f,0)} TL`:''}</div></div>`;
+  lastSac={name:`Sac ${nf0(en)}×${nf0(boy)}×${nf(t)}`,mat:m[0],n,kg}}
+$('s_add').onclick=()=>{const s=lastSac;if(!s)return;addItem(s.name,s.mat,s.n,'ad',s.kg)};
+
+/* ================= FITTINGS ================= */
+const G={sys:'en'};
+chips($('g_sys'),[['en','EN (DN)'],['as','ASME (NPS/SCH)']],'en',v=>{G.sys=v;gSizes()});
+function gOD(i){return G.sys==='en'?EN_OD[AS_DN[i]]:AS_OD[i]}
+function gLbl(i){return G.sys==='en'?`DN${AS_DN[i]} · Ø${nf(EN_OD[AS_DN[i]])}`:`${AS[i]} · Ø${nf(AS_OD[i])}`}
+function gTable(){const t=$('g_tip').value;return{e90lr:A90LR,e45lr:B45LR,e180lr:A90LR,e90sr:A90SR,tee:TEE_C,conc:RED_H,ecc:RED_H,cap:CAP_E}[t]}
+function gSizes(){const tb=gTable();const cur=$('g_sz').value||8;
+  $('g_szl').textContent=['conc','ecc'].includes($('g_tip').value)?'Büyük uç':'Ölçü';
+  opt($('g_sz'),AS.map((a,i)=>[i,gLbl(i)]).filter(([i])=>tb[i]!=null),cur);gSize2();gWall()}
+function gSize2(){const red=['conc','ecc'].includes($('g_tip').value);$('g_sz2box').style.visibility=red?'visible':'hidden';
+  if(red){const i=+$('g_sz').value;const items=[];for(let j=Math.max(0,i-4);j<i;j++)items.push([j,gLbl(j)]);opt($('g_sz2'),items.length?items:[[i,gLbl(i)]],i-1)}}
+function gWall(){const i=+$('g_sz').value;
+  if(G.sys==='en'){const dn=AS_DN[i];opt($('g_w'),EN_WALLS.map(w=>[w,nf(w)+' mm']),EN_WALL_DEF[dn]);$('g_t').value=$('g_w').value}
+  else{opt($('g_w'),SCH_ORDER.filter(k=>SCH[k][i]!=null).map(k=>[k,`SCH ${k}`]),SCH['40'][i]!=null?'40':'STD');$('g_t').value=SCH[$('g_w').value][i]}
+  renderFit()}
+$('g_tip').onchange=gSizes;$('g_sz').onchange=()=>{gSize2();gWall()};
+$('g_w').onchange=()=>{const v=$('g_w').value;$('g_t').value=G.sys==='en'?v:SCH[v][+$('g_sz').value];renderFit()};
+['g_sz2','g_t','g_mat','g_n'].forEach(id=>$(id).oninput=renderFit);
+let lastFit=null;
+function renderFit(){
+  const tip=$('g_tip').value,i=+$('g_sz').value,t=num($('g_t')),rho=MATS[+$('g_mat').value][1],n=parseInt($('g_n').value)||1;
+  const od=gOD(i);if(!t){$('g_out').innerHTML='';return}
+  const mpm=Math.PI*(od-t)*t*rho*1e-6; // kg/mm
+  const sz=G.sys==='en'?`DN${AS_DN[i]}`:AS[i];const wl=G.sys==='en'?`${nf(t)} mm`:`SCH ${$('g_w').value}`;
+  let rows=[],kg=0,name='',big='',bigs='';
+  if(tip.startsWith('e')){const R=tip==='e90sr'?A90SR[i]:A90LR[i];const ang={e90lr:90,e45lr:45,e180lr:180,e90sr:90}[tip];
+    kg=mpm*R*ang*Math.PI/180;name=`Dirsek ${ang}° ${tip==='e90sr'?'SR':'LR'} ${sz} ${wl}`;
+    if(ang===90){big=`A = ${R} mm`;bigs='Merkezden alına (kesimde düşülecek boy)'}
+    else if(ang===45){big=`B = ${B45LR[i]} mm`;bigs='Merkezden alına (kesimde düşülecek boy)'}
+    else{big=`O = ${2*R} mm`;bigs='Merkezden merkeze'}
+    rows=[['Eğrilik yarıçapı R',R+' mm'],ang===180?['Arka-alın K ≈',nf0(R+od/2)+' mm']:null]}
+  else if(tip==='tee'){const Cc=TEE_C[i];kg=mpm*(2*Cc+Math.max(0,Cc-od/2))*1.1;name=`Eşit tee ${sz} ${wl}`;big=`C = ${Cc} mm`;bigs='Merkezden her üç alına';rows=[['Ana hat boyu',2*Cc+' mm']]}
+  else if(tip==='conc'||tip==='ecc'){const j=+$('g_sz2').value;const od2=gOD(j);const H=RED_H[i];
+    const t2=G.sys==='en'?Math.min(t,EN_WALL_DEF[AS_DN[j]]):(SCH[$('g_w').value][j]||t);
+    const tm=(t+t2)/2,odm=(od+od2)/2;const sl=Math.sqrt(H*H+((od-od2)/2)**2);kg=Math.PI*(odm-tm)*tm*rho*1e-6*sl;
+    const sz2=G.sys==='en'?`DN${AS_DN[j]}`:AS[j];name=`${tip==='conc'?'Konsantrik':'Eksantrik'} red. ${sz}×${sz2} ${wl}`;
+    big=`H = ${H} mm`;bigs='Alından alına boy';rows=[['Uç çapları',`Ø${nf(od)} × Ø${nf(od2)}`],tip==='ecc'?['Eksantriklik',nf((od-od2)/2)+' mm']:null]}
+  else if(tip==='cap'){const E=CAP_E[i];const D=od-t;const s=Math.max(0,E-D/4);kg=(1.084*D*D+Math.PI*D*s)*t*rho*1e-6;name=`Kep ${sz} ${wl}`;big=`E = ${E} mm`;bigs='Kep boyu (alından tepeye)'}
+  let h=`<div class="big"><div class="t">${name}</div><div class="v">${big}</div><div class="s">${bigs}</div></div>`;
+  h+=kv([['Dış çap',`Ø${nf(od)} mm`],['Et',nf(t,2)+' mm'],...rows,['Ağırlık ≈',`${nf(kg,2)} kg/ad${n>1?` · ${nf(kg*n,1)} kg toplam`:''}`]]);
+  h+=`<div class="note">Ölçüler ASME B16.9 (EN 10253 3D tipiyle aynı). Ağırlık geometriden hesaplanır, katalogdan ±%10 sapabilir.${G.sys==='en'&&AS_DN[i]===65?' DN65 için EN dış çapı 76,1; ASME 2½" ise 73,0 mm.':''}</div>`;
+  $('g_out').innerHTML=h;lastFit={name,n,kg,mat:MATS[+$('g_mat').value][0]}}
+$('g_add').onclick=()=>{const f=lastFit;if(!f)return;addItem(f.name,f.mat,f.n,'ad',f.kg)};
+
+/* ================= LİSTE ================= */
+let LIST=store.get('fsa_list',[]);$('l_is').value=store.get('fsa_is','');
+$('l_is').oninput=()=>store.set('fsa_is',$('l_is').value);
+function saveList(){store.set('fsa_list',LIST);const b=$('badge');b.hidden=!LIST.length;b.textContent=LIST.length}
+function addItem(name,spec,qty,unit,kgEach,silent){
+  const ex=LIST.find(x=>x.name===name&&x.spec===spec&&x.unit===unit);
+  if(ex)ex.qty=+(ex.qty+qty).toFixed(2);else LIST.push({name,spec,qty,unit,kg:kgEach||0});
+  if(!silent){saveList();toast('Listeye eklendi')}}
+function renderList(){
+  if(!LIST.length){$('l_out').innerHTML='<div class="note">Liste boş. Diğer sekmelerden "Listeye ekle" ile malzeme ekleyin.</div>';return}
+  let tot=0;let h='';LIST.forEach((x,i)=>{const k=x.kg*x.qty;tot+=k;
+    h+=`<div class="li"><div><div class="n">${x.name}</div><div class="sp">${x.spec}${x.kg?` · ${nf(k,1)} kg`:''}</div></div>
+    <div style="display:flex;gap:6px;align-items:center"><input type="number" inputmode="decimal" value="${x.qty}" data-i="${i}"> <span class="sub">${x.unit}</span><button class="btn del" data-d="${i}">✕</button></div></div>`});
+  h+=`<div class="tot">Toplam ≈ ${nf(tot,1)} kg</div>`;$('l_out').innerHTML=h;}
+$('l_out').oninput=e=>{const i=e.target.dataset.i;if(i==null)return;LIST[i].qty=parseFloat(e.target.value)||0;saveList();
+  let tot=LIST.reduce((s,x)=>s+x.kg*x.qty,0);$('l_out').querySelector('.tot').textContent=`Toplam ≈ ${nf(tot,1)} kg`};
+$('l_out').onclick=e=>{const d=e.target.dataset.d;if(d==null)return;LIST.splice(+d,1);saveList();renderList()};
+function listText(){const is=$('l_is').value.trim();let s=(is?is+'\n':'')+'MALZEME LİSTESİ\n';
+  LIST.forEach((x,i)=>s+=`${i+1}. ${x.name} — ${x.spec} — ${x.qty} ${x.unit}\n`);
+  s+=`Toplam ≈ ${nf(LIST.reduce((a,x)=>a+x.kg*x.qty,0),1)} kg`;return s}
+$('l_share').onclick=async()=>{if(!LIST.length)return;const t=listText();
+  try{if(navigator.share){await navigator.share({title:'Malzeme listesi',text:t});return}}catch(e){if(e.name==='AbortError')return}
+  try{await navigator.clipboard.writeText(t);toast('Panoya kopyalandı')}catch(e){prompt('Kopyalayın:',t)}};
+$('l_csv').onclick=()=>{if(!LIST.length)return;const rows=[['Sıra','Malzeme','Özellik','Miktar','Birim','Birim kg','Toplam kg']];
+  LIST.forEach((x,i)=>rows.push([i+1,x.name,x.spec,String(x.qty).replace('.',','),x.unit,nf(x.kg,2),nf(x.kg*x.qty,2)]));
+  const csv='\ufeff'+rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(';')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=($('l_is').value.trim()||'malzeme_listesi').replace(/[^\wçğıöşüÇĞİÖŞÜ -]/g,'')+'.csv';a.click()};
+$('l_clr').onclick=()=>{if(LIST.length&&confirm('Liste temizlensin mi?')){LIST=[];saveList();renderList()}};
+
+
+/* ================= BAŞLAT ================= */
+renderFlange();renderHdpe();bagUI();setThick();renderBolt();pSys();renderSac();gSizes();saveList();
+</script>
+<script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script>
+</body>
+</html>
