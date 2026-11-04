@@ -66,6 +66,7 @@ svg{display:block;margin:6px auto 0;max-width:190px;width:100%}
 table.m{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
 table.m th,table.m td{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left;font-variant-numeric:tabular-nums}
 table.m th{color:var(--mute);font-weight:500;font-size:12px}
+table.m tr.sel td{background:var(--acc2);font-weight:700;color:var(--acc)}
 .match{border:1px solid var(--line);border-radius:10px;padding:9px 10px;margin-top:8px}
 .match.best{border-color:var(--ok);box-shadow:0 0 0 1px var(--ok) inset}
 .match b{font-size:16px}
@@ -170,6 +171,11 @@ footer{font-size:11px;color:var(--mute);text-align:center;padding:0 16px 24px}
     <div id="c_out"></div>
     <div class="btns"><button class="btn" id="c_add">Malzemeleri listeye ekle</button></div>
   </div>
+  <div class="card">
+    <h2>Hangi cıvataya hangi anahtar</h2>
+    <div class="note" style="margin-top:0">Altıgen cıvata ve somun için anahtar / lokma ağzı. Eski DIN 931/934 malzeme M10, M12, M14 ve M22'de farklıdır; ikisini de taşıyın.</div>
+    <table class="m" id="anahtar"></table>
+  </div>
 </section>
 
 <!-- ============ BORU / SAC ============ -->
@@ -261,7 +267,7 @@ footer{font-size:11px;color:var(--mute);text-align:center;padding:0 16px 24px}
   </div>
 </section>
 </main>
-<footer>Değerler EN 1092-1, EN 1514-1, EN 10220, ASME B36.10/B36.19, ASME B16.9, ISO 4014/4032/7089 ve EN 558'e dayanır. Flanş kalınlıkları ve ağırlıklar tipik değerdir. Kritik siparişte üretici kataloğuyla teyit edin.</footer>
+<footer>Değerler EN 1092-1, EN 1514-1, EN 10220, ASME B36.10/B36.19, ASME B16.9, ISO 4014/4032/7089 ve EN 558'e dayanır. Flanş kalınlıkları DIN 2573/2576/2502/2503, 2631–2635 ve 2527'ye göredir; ağırlıklar yaklaşıktır. Kritik siparişte üretici kataloğuyla teyit edin.</footer>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -289,23 +295,38 @@ const RF={PN6:mk([35,40,50,60,70,80,90,110,128,148,178,202,258,312,365,415,465,5
  PN25:mk([40,45,58,68,78,88,102,122,138,162,188,218,278,335,395,450,505,555,615,720]),
  PN40:mk([40,45,58,68,78,88,102,122,138,162,188,218,285,345,410,465,535,560,615,735])};
 // Tipik kalınlıklar: T01 düz plaka, C2 kör/kaynak boyunlu
-const T01={PN6:mk([12,12,14,14,16,16,16,16,18,18,20,20,22,24,24,26,28,28,30,30]),
- PN10:mk([14,14,16,16,18,18,19,20,20,22,22,24,24,26,26,28,32,36,38,42]),
- PN16:mk([14,14,16,16,18,18,19,20,20,22,22,24,26,29,32,35,38,42,46,55]),
- PN25:mk([16,16,18,18,20,20,22,24,26,28,30,32,34,38,42,46,50,56,60,68]),
- PN40:mk([16,16,18,18,20,20,22,24,26,28,30,32,36,42,48,54,58,62,66,76])};
-const C2={PN6:mk([12,12,14,14,14,14,14,14,16,16,18,18,20,22,22,22,22,24,24,30]),
- PN10:mk([16,16,18,18,18,18,18,18,20,20,22,22,24,26,26,26,26,28,28,34]),
- PN16:mk([16,16,18,18,18,18,18,18,20,20,22,22,24,26,28,30,32,40,44,54]),
- PN25:mk([16,16,18,18,18,18,20,22,24,24,26,28,30,32,34,38,40,46,48,58]),
- PN40:mk([16,16,18,18,18,18,20,22,24,24,26,28,34,38,42,46,50,57,57,72])};
+// DIN kalınlıkları (b, mm). Düz: DIN 2573/2576/2502/2503 · Kaynak boyunlu: DIN 2631–2635 · Kör: DIN 2527
+const N=null;
+const T01={PN6:mk([12,12,14,14,16,16,16,16,18,18,20,20,22,24,24,26,28,30,30,32]),
+ PN10:mk([14,14,16,16,16,16,18,18,20,20,22,22,24,26,26,28,32,38,38,42]),
+ PN16:mk([14,14,16,16,16,16,18,18,20,20,22,22,24,26,28,30,32,38,38,42]),
+ PN25:mk([16,16,18,18,18,18,18,22,24,24,26,28,30,32,34,38,40,N,44,50]),
+ PN40:mk([16,16,18,18,18,18,18,22,24,24,26,28,34,38,42,46,50,N,52,54])};
+const T01_BIG={PN6:{700:36,800:44,900:48,1000:52},PN10:{700:50,800:56,900:62,1000:70},PN16:{700:44,800:50,900:54,1000:60}};
+const C2={PN6:mk([12,12,14,14,14,14,14,14,16,16,18,18,20,22,22,22,22,N,24,N]),
+ PN10:mk([14,14,16,16,16,16,18,18,20,20,22,22,24,26,26,26,26,N,28,N]),
+ PN16:mk([14,14,16,16,16,16,18,18,20,20,22,22,24,26,28,30,32,N,34,36]),
+ PN25:mk([16,16,18,18,18,18,20,22,24,24,26,28,30,32,34,38,40,N,44,46]),
+ PN40:mk([16,16,18,18,18,18,20,22,24,24,26,28,34,38,42,46,50,N,52,N])};
+const KOR16=mk([14,14,16,16,16,16,18,18,20,20,22,22,24,26,28,30,32,N,36,40]);
+const NORM={t01:{PN6:'DIN 2573',PN10:'DIN 2576',PN16:'DIN 2502',PN25:'DIN 2503',PN40:'DIN 2503'},
+ t02:{PN6:'DIN 2641',PN10:'DIN 2642',PN16:'DIN 2642',PN25:'DIN 2655',PN40:'DIN 2656'},
+ t11:{PN6:'DIN 2631',PN10:'DIN 2632',PN16:'DIN 2633',PN25:'DIN 2634',PN40:'DIN 2635'},
+ t05:{PN6:'DIN 2527',PN10:'DIN 2527',PN16:'DIN 2527',PN25:'DIN 2527',PN40:'DIN 2527'},
+ t13:{PN6:'DIN 2565',PN10:'DIN 2566',PN16:'DIN 2566',PN25:'DIN 2567',PN40:'DIN 2567'}};
 const B1=mk([18,22,27.6,34.4,43.1,49,61.1,77.1,90.3,115.9,141.6,170.5,221.8,276.2,327.6,359.7,411,462.3,513.6,616.5]);
 const IBC_IN={10:18,15:22,20:27,25:34,32:43,40:49,50:61,65:77,80:89,100:115,125:141,150:169,200:220,250:273,300:324,350:356,400:407,450:458,500:508,600:610,700:712,800:813,900:915,1000:1016};
 const TIPLER={t01:'Düz (Tip 01, plaka)',t11:'Kaynak boyunlu (Tip 11)',t05:'Kör (Tip 05)',t02:'Serbest / döner (Tip 02)',t13:'Dişli (Tip 13)'};
-function kal(tip,pn,dn){const t=(tip==='t11'||tip==='t05')?C2:T01;return t[pn]&&t[pn][dn]!=null?t[pn][dn]:null}
+function kal(tip,pn,dn){let t;
+  if(tip==='t05'&&pn==='PN16')t=KOR16[dn];
+  else if(tip==='t11'||tip==='t05')t=C2[pn][dn];
+  else t=T01[pn][dn]!=null?T01[pn][dn]:(T01_BIG[pn]&&T01_BIG[pn][dn]);
+  return t!=null?t:null}
 
 // Cıvata verisi: somun yüksekliği m (ISO 4032), pul h ve dış çap (ISO 7089), adım, anahtar ağzı (ISO), DIN alternatif
 const BOLT={10:{m:8.4,w:2,wd:20,p:1.5,s:16,din:17},12:{m:10.8,w:2.5,wd:24,p:1.75,s:18,din:19},16:{m:14.8,w:3,wd:30,p:2,s:24},20:{m:18,w:3,wd:37,p:2.5,s:30},24:{m:21.5,w:4,wd:44,p:3,s:36},27:{m:23.8,w:4,wd:50,p:3,s:41},30:{m:25.6,w:4,wd:56,p:3.5,s:46},33:{m:28.7,w:5,wd:60,p:3.5,s:50},36:{m:31,w:5,wd:66,p:4,s:55},39:{m:33.4,w:6,wd:72,p:4,s:60},45:{m:36,w:8,wd:85,p:4.5,s:70}};
+// Anahtar ağzı: ISO 4032 / DIN 934 (eski) · imbus: DIN 912
+const ANAHTAR=[[8,13,13,6],[10,16,17,8],[12,18,19,10],[14,21,22,12],[16,24,24,14],[18,27,27,14],[20,30,30,17],[22,34,32,17],[24,36,36,19],[27,41,41,19],[30,46,46,22],[33,50,50,24],[36,55,55,27],[39,60,60,27],[42,65,65,32],[45,70,70,32],[48,75,75,36]];
 const BL_STD=[30,35,40,45,50,55,60,65,70,75,80,90,100,110,120,130,140,150,160,180,200,220,240,260,280,300];
 // EN 558 seri 20 (wafer kelebek vana) gövde boyu
 const WAFER={40:33,50:43,65:46,80:46,100:52,125:56,150:56,200:60,250:68,300:78,350:78,400:102,450:114,500:127,600:154,700:165,800:190,900:203,1000:216};
@@ -390,10 +411,10 @@ function renderFlange(){
   const t=kal(tip,pn,dn);const w=t?flangeWeight(tip,pn,dn,t):null;const B=BOLT[M];
   const rf=RF[pn]&&RF[pn][dn];
   let h=flangeSVG(pn,dn);
-  h+=`<div class="big"><div class="t">Cıvata</div><div class="v">${n} × M${M}</div><div class="s">Delik Ø${L} · anahtar ağzı ${B.s} mm${B.din?` (DIN ${B.din})`:''}</div></div>`;
+  h+=`<div class="big"><div class="t">Cıvata</div><div class="v">${n} × M${M}</div><div class="s">Delik Ø${L}</div><div class="s" style="color:var(--ink);font-weight:600;margin-top:4px">🔧 Anahtar ${B.s} mm${B.din?` (eski DIN: ${B.din} mm)`:''}</div></div>`;
   h+=kv([['Dış çap D',nf0(D)+' mm'],['Delik merkez çapı K',nf0(K)+' mm'],['Delik çapı L × adet',`Ø${L} × ${n}`],
    rf?['Conta yüzü d1 (RF)',nf0(rf)+' mm']:null,
-   ['Kalınlık (tipik)',t?nf0(t)+' mm':'katalogdan alın'],
+   ['Kalınlık b',t?nf0(t)+' mm':'katalogdan alın'],['Norm',NORM[tip][pn]+' (EN 1092-1 delik ölçüsü)'],
    tip!=='t05'?['Boru dış çapı (EN 10220)',nf(EN_OD[dn])+' mm']:null,
    tip==='t01'&&B1[dn]?['İç delik B1 (tipik)',nf(B1[dn])+' mm']:null,
    tip==='t13'&&RP[dn]?['Diş',RP[dn]+' (BSP)']:null,
@@ -435,6 +456,8 @@ $('c_dn').onchange=()=>{setThick();renderBolt()};
 ['c_t1','c_t2'].forEach(id=>$(id).onchange=()=>{setThick();renderBolt()});
 $('c_bag').onchange=()=>{bagUI();renderBolt()};
 ['c_k1','c_k2','c_mid','c_gn','c_g','c_tur','c_pul','c_adet'].forEach(id=>$(id).oninput=renderBolt);
+function renderAnahtar(M){$('anahtar').innerHTML='<tr><th>Cıvata</th><th>Anahtar ISO</th><th>Anahtar DIN</th><th>İmbus</th></tr>'+
+  ANAHTAR.map(([m,iso,din,im])=>`<tr class="${m===M?'sel':''}"><td>M${m}</td><td>${iso} mm</td><td>${din===iso?'–':din+' mm'}</td><td>${im} mm</td></tr>`).join('')}
 function boltMass(M,L,stud){const d=M,s=BOLT[M].s;const shank=Math.PI/4*d*d*L;const head=stud?0:0.866*s*s*0.7*d;return(shank+head)*7.85e-6}
 function nutMass(M){const s=BOLT[M].s,m=BOLT[M].m;return(0.866*s*s-Math.PI/4*M*M)*m*7.85e-6}
 function washerMass(M){const b=BOLT[M];return Math.PI/4*(b.wd*b.wd-(M+1)*(M+1))*b.w*7.85e-6}
@@ -452,22 +475,21 @@ function renderBolt(){
   if(tur==='bolt'){Lreq=grip+pul*B.w+B.m+tas;Lsel=BL_STD.find(x=>x>=Lreq)||Math.ceil(Lreq/10)*10}
   else{Lreq=grip+pul*B.w+2*B.m+2*tas;Lsel=Math.ceil(Lreq/5)*5}
   const elem=tur==='bolt'?'Cıvata':'Saplama';
-  h+=`<div class="big"><div class="t">${elem} (her bağlantı)</div><div class="v">${n} × M${M} × ${Lsel}</div><div class="s">Hesaplanan ${nf(Lreq)} mm → ${tur==='bolt'?'standart boya':'5 mm\'ye'} yuvarlandı</div></div>`;
+  h+=`<div class="big"><div class="t">${elem} (her bağlantı)</div><div class="v">${n} × M${M} × ${Lsel}</div><div class="s">Hesaplanan ${nf(Lreq)} mm → ${tur==='bolt'?'standart boya':'5 mm\'ye'} yuvarlandı</div><div class="s" style="color:var(--ink);font-weight:600;margin-top:4px">🔧 Anahtar ${B.s} mm${B.din?` (eski DIN: ${B.din} mm)`:''}</div></div>`;
   let thr='';
   if(tur==='bolt'){const b=Lsel<=125?2*M+6:Lsel<=200?2*M+12:2*M+25;const shank=Lsel-b;const need=grip+pul*B.w;
     thr=shank>need-B.p?`Kısmi dişte (ISO 4014 / DIN 931) diş boyu ${b} mm, somunun oturması için yetmiyor → <b>tam diş (ISO 4017 / DIN 933)</b> kullanın.`:`Kısmi diş (ISO 4014 / DIN 931) uygun; diş boyu ${b} mm.`}
   else if(bag==='wafer')thr='Wafer vanada saplama gövdedeki deliklerden ya da yanından geçer; lug tipi vanada her iki flanşa ayrı kısa cıvata gerekir.';
   const nuts=tur==='bolt'?n:2*n;const wash=pul*n;
   h+=kv([['Tutulan kalınlık',`${nf(t1)} + ${nf(t2)}${gn?` + ${gn}×${nf(g)} conta`:''}${mid?` + ${nf(mid)}`:''} = ${nf(grip)} mm`],
-    ['Somun (ISO 4032) yük.',nf(B.m)+' mm'],pul?['Pul (ISO 7089)',`${nf(B.w)} mm · Ø${B.wd}`]:null,['Diş taşması (2 diş)',nf(tas)+' mm'],
-    ['Anahtar ağzı',`${B.s} mm${B.din?` (DIN ${B.din})`:''}`]]);
+    ['Somun (ISO 4032) yük.',nf(B.m)+' mm'],pul?['Pul (ISO 7089)',`${nf(B.w)} mm · Ø${B.wd}`]:null,['Diş taşması (2 diş)',nf(tas)+' mm']]);
   h+=`<div class="note">${thr}</div>`;
   h+=`<h3>${adet} bağlantı için malzeme</h3><table class="m"><tr><th>Malzeme</th><th>Adet</th></tr>
    <tr><td>${elem} M${M}×${Lsel}</td><td>${n*adet}</td></tr><tr><td>Somun M${M}</td><td>${nuts*adet}</td></tr>
    ${pul?`<tr><td>Pul M${M}</td><td>${wash*adet}</td></tr>`:''}
    ${gn?`<tr><td>${gName} DN${dn} ${pn} (Ø${IBC_IN[dn]}/Ø${K-L})</td><td>${gn*adet}</td></tr>`:''}</table>`;
   if(dn>=700&&(t1==null||t2==null))h+='<div class="warn">DN700 üzeri için kalınlıkları katalogdan girin.</div>';
-  $('c_out').innerHTML=h;
+  $('c_out').innerHTML=h;renderAnahtar(M);
   lastBolt={dn,pn,M,Lsel,n,nuts,wash,gn,gName,elem,adet,K,L,tur,
     kgB:boltMass(M,Lsel,tur==='stud'),kgN:nutMass(M),kgW:washerMass(M)};
 }
