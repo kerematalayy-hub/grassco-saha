@@ -33,7 +33,7 @@ header{position:sticky;top:0;z-index:10;background:var(--card);border-bottom:3px
 .brand .tag{font-size:12px;color:var(--mute)}
 nav{display:flex;max-width:640px;margin:0 auto;overflow-x:auto;scrollbar-width:none}
 nav::-webkit-scrollbar{display:none}
-nav button{flex:1 0 auto;border:0;background:none;color:var(--mute);padding:10px 8px;font-size:14px;font-weight:600;border-bottom:2px solid transparent}
+nav button{flex:1 0 auto;border:0;background:none;color:var(--mute);padding:10px 6px;font-size:13.5px;font-weight:600;border-bottom:2px solid transparent}
 nav button.on{color:var(--ink);border-bottom-color:var(--grn)}
 nav .badge{display:inline-block;min-width:18px;padding:0 5px;margin-left:4px;border-radius:9px;background:var(--grn);color:#fff;font-size:11px;line-height:18px}
 main{padding:12px;max-width:640px;margin:0 auto;padding-bottom:40px}
@@ -66,6 +66,7 @@ svg{display:block;margin:6px auto 0;max-width:190px;width:100%}
 table.m{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
 table.m th,table.m td{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left;font-variant-numeric:tabular-nums}
 table.m th{color:var(--mute);font-weight:500;font-size:12px}
+table.m tr[data-m]{cursor:pointer}
 table.m tr.sel td{background:var(--acc2);font-weight:700;color:var(--acc)}
 .match{border:1px solid var(--line);border-radius:10px;padding:9px 10px;margin-top:8px}
 .match.best{border-color:var(--ok);box-shadow:0 0 0 1px var(--ok) inset}
@@ -92,6 +93,7 @@ footer{font-size:11px;color:var(--mute);text-align:center;padding:0 16px 24px}
     <button data-t="civata">Cıvata</button>
     <button data-t="boru">Boru</button>
     <button data-t="fit">Fittings</button>
+    <button data-t="anahtar_t">Anahtar</button>
     <button data-t="liste">Liste<span class="badge" id="badge" hidden>0</span></button>
   </nav>
 </header>
@@ -171,11 +173,6 @@ footer{font-size:11px;color:var(--mute);text-align:center;padding:0 16px 24px}
     <div id="c_out"></div>
     <div class="btns"><button class="btn" id="c_add">Malzemeleri listeye ekle</button></div>
   </div>
-  <div class="card">
-    <h2>Hangi cıvataya hangi anahtar</h2>
-    <div class="note" style="margin-top:0">Altıgen cıvata ve somun için anahtar / lokma ağzı. Eski DIN 931/934 malzeme M10, M12, M14 ve M22'de farklıdır; ikisini de taşıyın.</div>
-    <table class="m" id="anahtar"></table>
-  </div>
 </section>
 
 <!-- ============ BORU / SAC ============ -->
@@ -253,6 +250,21 @@ footer{font-size:11px;color:var(--mute);text-align:center;padding:0 16px 24px}
 </section>
 
 <!-- ============ LİSTE ============ -->
+<!-- ============ ANAHTAR ============ -->
+<section id="anahtar_t">
+  <div class="card">
+    <h2>Cıvata – anahtar</h2>
+    <label>Cıvata çapı</label>
+    <div class="chips" id="a_m"></div>
+    <div id="a_out"></div>
+  </div>
+  <div class="card">
+    <h2>Tüm ölçüler</h2>
+    <div class="note" style="margin-top:0">Satıra dokununca üstte seçilir. Eski DIN 931/934 cıvata ve somunlar M10, M12, M14 ve M22'de farklı anahtar ister; sahada ikisini de bulundurun.</div>
+    <table class="m" id="anahtar"></table>
+  </div>
+</section>
+
 <section id="liste">
   <div class="card">
     <h2>Malzeme listesi</h2>
@@ -326,7 +338,8 @@ function kal(tip,pn,dn){let t;
 // Cıvata verisi: somun yüksekliği m (ISO 4032), pul h ve dış çap (ISO 7089), adım, anahtar ağzı (ISO), DIN alternatif
 const BOLT={10:{m:8,w:2,wd:20,p:1.5,s:16,din:17},12:{m:10,w:2.5,wd:24,p:1.75,s:18,din:19},16:{m:13,w:3,wd:30,p:2,s:24},20:{m:16,w:3,wd:37,p:2.5,s:30},24:{m:19,w:4,wd:44,p:3,s:36},27:{m:22,w:4,wd:50,p:3,s:41},30:{m:24,w:4,wd:56,p:3.5,s:46},33:{m:26,w:5,wd:60,p:3.5,s:50},36:{m:29,w:5,wd:66,p:4,s:55},39:{m:31,w:6,wd:72,p:4,s:60},45:{m:36,w:8,wd:85,p:4.5,s:70}};
 // Anahtar ağzı: ISO 4032 / DIN 934 (eski) · imbus: DIN 912
-const ANAHTAR=[[8,13,13,6],[10,16,17,8],[12,18,19,10],[14,21,22,12],[16,24,24,14],[18,27,27,14],[20,30,30,17],[22,34,32,17],[24,36,36,19],[27,41,41,19],[30,46,46,22],[33,50,50,24],[36,55,55,27],[39,60,60,27],[42,65,65,32],[45,70,70,32],[48,75,75,36]];
+// [M, anahtar ISO, anahtar DIN, imbus DIN 912, diş adımı, kılavuz matkabı]
+const ANAHTAR=[[6,10,10,5,1,5],[8,13,13,6,1.25,6.8],[10,16,17,8,1.5,8.5],[12,18,19,10,1.75,10.2],[14,21,22,12,2,12],[16,24,24,14,2,14],[18,27,27,14,2.5,15.5],[20,30,30,17,2.5,17.5],[22,34,32,17,2.5,19.5],[24,36,36,19,3,21],[27,41,41,19,3,24],[30,46,46,22,3.5,26.5],[33,50,50,24,3.5,29.5],[36,55,55,27,4,32],[39,60,60,27,4,35],[42,65,65,32,4.5,37.5],[45,70,70,32,4.5,40.5],[48,75,75,36,5,43]];
 const BL_STD=[30,35,40,45,50,55,60,65,70,75,80,90,100,110,120,130,140,150,160,180,200,220,240,260,280,300];
 // EN 558 seri 20 (wafer kelebek vana) gövde boyu
 const WAFER={40:33,50:43,65:46,80:46,100:52,125:56,150:56,200:60,250:68,300:78,350:78,400:102,450:114,500:127,600:154,700:165,800:190,900:203,1000:216};
@@ -456,8 +469,16 @@ $('c_dn').onchange=()=>{setThick();renderBolt()};
 ['c_t1','c_t2'].forEach(id=>$(id).onchange=()=>{setThick();renderBolt()});
 $('c_bag').onchange=()=>{bagUI();renderBolt()};
 ['c_k1','c_k2','c_mid','c_gn','c_g','c_tur','c_pul','c_adet'].forEach(id=>$(id).oninput=renderBolt);
-function renderAnahtar(M){$('anahtar').innerHTML='<tr><th>Cıvata</th><th>Anahtar ISO</th><th>Anahtar DIN</th><th>İmbus</th></tr>'+
-  ANAHTAR.map(([m,iso,din,im])=>`<tr class="${m===M?'sel':''}"><td>M${m}</td><td>${iso} mm</td><td>${din===iso?'–':din+' mm'}</td><td>${im} mm</td></tr>`).join('')}
+let A_SEL=16;
+function renderAnahtar(M){if(M)A_SEL=M;const r=ANAHTAR.find(x=>x[0]===A_SEL);const [m,iso,din,im,p,dr]=r;
+  [...$('a_m').children].forEach(b=>b.classList.toggle('on',+b.dataset.v===m));
+  $('a_out').innerHTML=`<div class="big"><div class="t">M${m} cıvata ve somun</div><div class="v">🔧 ${iso} mm</div><div class="s">${din!==iso?`Eski DIN cıvata/somun: <b>${din} mm</b>`:'ISO ve DIN aynı'}</div></div>`+
+   kv([['Yıldız / kombine / lokma',iso+' mm'],['İmbus (DIN 912)',im+' mm'],['Diş adımı',nf(p,p%1?2:0).replace(/,?0+$/,'')+' mm'],['Diş açma matkabı',nf(dr,1)+' mm']]);
+  $('anahtar').innerHTML='<tr><th>Cıvata</th><th>Anahtar</th><th>Eski DIN</th><th>İmbus</th></tr>'+
+   ANAHTAR.map(([m,iso,din,im])=>`<tr data-m="${m}" class="${m===A_SEL?'sel':''}"><td>M${m}</td><td>${iso} mm</td><td>${din===iso?'–':din+' mm'}</td><td>${im} mm</td></tr>`).join('')}
+$('a_m').innerHTML=ANAHTAR.map(x=>`<button data-v="${x[0]}">M${x[0]}</button>`).join('');
+$('a_m').onclick=e=>{const b=e.target.closest('button');if(b)renderAnahtar(+b.dataset.v)};
+$('anahtar').onclick=e=>{const tr=e.target.closest('tr[data-m]');if(tr){renderAnahtar(+tr.dataset.m);window.scrollTo({top:0,behavior:'smooth'})}};
 function boltMass(M,L,stud){const d=M,s=BOLT[M].s;const shank=Math.PI/4*d*d*L;const head=stud?0:0.866*s*s*0.7*d;return(shank+head)*7.85e-6}
 function nutMass(M){const s=BOLT[M].s,m=BOLT[M].m;return(0.866*s*s-Math.PI/4*M*M)*m*7.85e-6}
 function washerMass(M){const b=BOLT[M];return Math.PI/4*(b.wd*b.wd-(M+1)*(M+1))*b.w*7.85e-6}
@@ -616,7 +637,7 @@ $('l_clr').onclick=()=>{if(LIST.length&&confirm('Liste temizlensin mi?')){LIST=[
 
 
 /* ================= BAŞLAT ================= */
-renderFlange();renderHdpe();bagUI();setThick();renderBolt();pSys();renderSac();gSizes();saveList();
+renderAnahtar(16);renderFlange();renderHdpe();bagUI();setThick();renderBolt();pSys();renderSac();gSizes();saveList();
 </script>
 <script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script>
 </body>
